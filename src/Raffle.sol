@@ -27,14 +27,12 @@ import {VRFConsumerBaseV2Plus} from "@chainlink/contracts/src/v0.8/vrf/dev/VRFCo
 import {VRFV2PlusClient} from "@chainlink/contracts/src/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
 import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/interfaces/AutomationCompatibleInterface.sol";
 
-
 /**
  * @title A sample Raffle Contract
  * @author Himanshu Singh
- * @notice This Contract is for creating a sample raffle 
+ * @notice This Contract is for creating a sample raffle
  * @dev Implements Chainlink VRFv2.5
  */
-
 contract Raffle is VRFConsumerBaseV2Plus {
     /* Errors */
     error Raffle__SendMoreETHtoEnterRaffle();
@@ -44,10 +42,10 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
     /* Type Declaration */
     enum RaffleState {
-        OPEN,         // 0       // Raffle is still open for entry
-        CALCULATING   // 1       // Raffle is calculating winner so currently no entry is allowed
-    }
+        OPEN, // 0       // Raffle is still open for entry
+        CALCULATING // 1       // Raffle is calculating winner so currently no entry is allowed
 
+    }
 
     /* State Variables */
     uint256 private immutable i_subscriptionId;
@@ -74,7 +72,8 @@ contract Raffle is VRFConsumerBaseV2Plus {
         uint256 interval,
         uint256 entranceFee,
         uint32 callbackGasLimit,
-        address vrfCoordinatorV2) VRFConsumerBaseV2Plus(vrfCoordinatorV2) {
+        address vrfCoordinatorV2
+    ) VRFConsumerBaseV2Plus(vrfCoordinatorV2) {
         i_gasLane = gasLane;
         i_interval = interval;
         i_subscriptionId = subscriptionId;
@@ -88,12 +87,10 @@ contract Raffle is VRFConsumerBaseV2Plus {
     function enterRaffle() external payable {
         // require(msg.value >= i_entranceFee, "Not Enough ETH send"); //depriciated
         // require(msg.value >= i_entranceFee, Raffle__SendMoreETHtoEnterRaffle()); //latest
-        if(msg.value < i_entranceFee)
-        {
+        if (msg.value < i_entranceFee) {
             revert Raffle__SendMoreETHtoEnterRaffle();
         } // depriciated but works with 0.8.19
-        if(s_raffleState != RaffleState.OPEN)
-        {
+        if (s_raffleState != RaffleState.OPEN) {
             revert Raffle_RaffleNotOpen();
         }
         s_players.push(payable(msg.sender));
@@ -103,7 +100,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     }
 
     // 1. get a random number
-    // 2. use random number to pick a player 
+    // 2. use random number to pick a player
     // 3. Be automatically called
 
     /**
@@ -132,12 +129,11 @@ contract Raffle is VRFConsumerBaseV2Plus {
      * @dev Once `checkUpkeep` is returning `true`, this function is called
      * and it kicks off a Chainlink VRF call to get a random winner.
      */
-
-    function performUpkeep(bytes calldata /* performData */ ) external  {
+    function performUpkeep(bytes calldata /* performData */ ) external {
         (bool upkeepNeeded,) = checkUpkeep("");
         // require(upkeepNeeded, "Upkeep not needed");
         if (!upkeepNeeded) {
-            revert Raffle__UpkeepNotNeeded( address(this).balance, s_players.length, uint256(s_raffleState) );
+            revert Raffle__UpkeepNotNeeded(address(this).balance, s_players.length, uint256(s_raffleState));
         }
 
         s_raffleState = RaffleState.CALCULATING;
@@ -159,7 +155,6 @@ contract Raffle is VRFConsumerBaseV2Plus {
         // Quiz... is this redundant?
         emit RequestedRaffleWinner(requestId);
     }
-
 
     /**
      * @dev This is the function that Chainlink VRF node
@@ -192,7 +187,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     /**
      * Getter Functions
      */
-    function getEntranceFee() external view returns(uint256) {
+    function getEntranceFee() external view returns (uint256) {
         return i_entranceFee;
     }
 
@@ -200,7 +195,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
         return s_raffleState;
     }
 
-    function getPlayer(uint256 indexOfPlayer) external view returns(address) {
+    function getPlayer(uint256 indexOfPlayer) external view returns (address) {
         return s_players[indexOfPlayer];
     }
 

@@ -7,7 +7,6 @@ import {Script, console2} from "forge-std/Script.sol";
 import {VRFCoordinatorV2_5Mock} from "@chainlink/contracts/src/v0.8/vrf/mocks/VRFCoordinatorV2_5Mock.sol";
 
 abstract contract CodeConstants {
-
     /* VRF MOCK Values */
     uint96 public MOCK_BASE_FEE = 0.25 ether;
     uint96 public MOCK_GAS_PRICE_LINK = 1e9;
@@ -22,7 +21,6 @@ abstract contract CodeConstants {
 }
 
 contract HelperConfig is CodeConstants, Script {
-
     error HelperConfig__InvalidChainId();
 
     struct NetworkConfig {
@@ -37,9 +35,9 @@ contract HelperConfig is CodeConstants, Script {
     }
 
     NetworkConfig public localNetworkConfig;
-    mapping (uint256 chainId => NetworkConfig) public networkConfigs;
+    mapping(uint256 chainId => NetworkConfig) public networkConfigs;
 
-    constructor(){
+    constructor() {
         networkConfigs[ETH_SEPOLIA_CHAIN_ID] = getSepoliaEthConfig();
     }
 
@@ -102,4 +100,4 @@ contract HelperConfig is CodeConstants, Script {
         vm.deal(localNetworkConfig.account, 100 ether);
         return localNetworkConfig;
     }
-} 
+}

@@ -11,7 +11,6 @@ import {LinkToken} from "../../test/mocks/LinkToken.sol";
 import {CodeConstants} from "../../script/HelperConfig.s.sol";
 
 contract RaffleTest is Test, CodeConstants {
-
     event RequestedRaffleWinner(uint256 indexed requestId);
     event RaffleEntered(address indexed player);
     event WinnerPicked(address indexed winner);
@@ -77,7 +76,7 @@ contract RaffleTest is Test, CodeConstants {
         // Assert
         address playerRecorded = raffle.getPlayer(0);
         assert(playerRecorded == PLAYER);
-    }  
+    }
 
     function testEmitsEventOnEntrance() public {
         // Arrange
@@ -87,7 +86,7 @@ contract RaffleTest is Test, CodeConstants {
         vm.expectEmit(true, false, false, false, address(raffle)); //events are not directly fetched in solidity like structs(Raffle.RaffleState.OPEN), so we have to perform expectEmit
         emit RaffleEntered(PLAYER);
         raffle.enterRaffle{value: raffleEntranceFee}();
-    }  
+    }
 
     function testDontAllowPlayersToEnterWhileRaffleIsCalculating() public {
         //Arrange
@@ -253,7 +252,6 @@ contract RaffleTest is Test, CodeConstants {
             hoax(player, 1 ether); // deal 1 eth to the player
             raffle.enterRaffle{value: raffleEntranceFee}();
         }
-
 
         uint256 startingTimeStamp = raffle.getLastTimeStamp();
         uint256 startingBalance = expectedWinner.balance;
